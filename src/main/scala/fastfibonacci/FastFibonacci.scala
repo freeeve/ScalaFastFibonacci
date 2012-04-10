@@ -1,159 +1,114 @@
-package scala.eightqueens
+package scala.fastfibonacci
 import scala.collection.mutable.Stack
+import scala.collection.mutable.HashMap
 
-object EightQueens {
-  def main(args:Array[String]) : Unit = {
-    n = Integer.parseInt(args.first) 
-    findQueens();
-  }
-  var n:Int = 8;
-  
-  def findQueens(): Unit = {
-    var stack: Stack[List[Int]] = new Stack[List[Int]]
-    for (row <- 1 to n) {
-      stack = stack.push(List(row));
-    }
-    var found:List[List[Int]] = List()
-    var unique:List[List[Int]] = List()
-    var count:Long = 0;
-    while (stack.size > 0) {
-      // depth first tree search... pop off the top list
-      val cur: List[Int] = stack.pop
-      // if we get to size 8, we found a solution
-      if (cur.size == n) {
-        count+=1;
-        /*
-        found ::= cur
-        if(!findRotate(unique, cur) && !unique.contains(cur.reverse)) {
-          unique ::= cur
-        }*/
-      }
-      for (row <- 1 to n) {
-        var next: List[Int] = cur;
-        // checks verticals and diagonals before pushing
-        if (!next.contains(row) && !checkDiagonal(next, row)) {
-          next ::= row;
-          stack = stack.push(next);   
-        }
-      }
-    }
-    unique.foreach(b => {
-        println(b)
-        println(printBoard(b))
-      }
-    )
-    println("found %d distinct solutions".format(count))
-    //println("found %d unique solutions".format(unique.size))
-  }
-  
-  // prints the board to a string
-  def printBoard(board:List[Int]):String = {
-    var ret:String = ""
-    for(col <- 1 to n) {
-      for(row <- 1 to n) { 
-        def mid:String = {
-           if(board(col-1) == row) {
-             "Q"
-           } else {
-             "."
-           }
-        }
-        ret += " " + mid + " "
-      }
-      ret += "\n"
-    }
-    ret
-  }
-
-  // checks that the current row doesn't conflict on any diagonals
-  def checkDiagonal(next:List[Int], row:Int): Boolean = {
-    var found:Boolean = false;
-    var r:Int = row
-    for(col <- 0 to next.length-1) {
-      if(next(col) == r-1) {
-        found = true
-      }       
-      r -= 1
-    }
-    r = row;
-    for(col <- 0 to next.length-1) {    
-      if(next(col) == r+1) {
-        found = true
-      }
-      r += 1
-    }
-    found
-  }
-  
-  // somewhat cheesy way to find rotational equality
-  // compare by printing out rotated boards
-  def findRotate(unique:List[List[Int]], board:List[Int]):Boolean = {
-    var found:Boolean = false
-    unique.foreach(b => {
-        if(printBoard(board).equals(printBoardRotate(b))) {
-          found = true
-        }
-        if(printBoard(board).equals(printBoardRotate(b.reverse))) {
-          found = true
-        }
-        if(printBoard(board.reverse).equals(printBoardRotate(b))) {
-          found = true
-        }
-        if(printBoard(board.reverse).equals(printBoardRotate(b.reverse))) {
-          found = true
-        }
-        if(printBoard(board).equals(printBoard180(b))) {
-          found = true
-        }
-        if(printBoard(board).equals(printBoard180(b.reverse))) {
-          found = true
-        }
-        if(printBoard(board.reverse).equals(printBoard180(b))) {
-          found = true
-        }
-        if(printBoard(board.reverse).equals(printBoard180(b.reverse))) {
-          found = true
-        }
-      }
-    )
-    found
-  }
+object FastFibonacci {
+  def main(args:Array[String]):Unit = {
+    var i:LargeInt = 1;
+    /*var start = System.currentTimeMillis();
+     print("fast("+i+"): "+ fast(i).bitLength); 
+    var end = System.currentTimeMillis();
+    println(" in: "+(end-start)+"ms");*/
     
-  // print the board rotated 90 degrees
-  def printBoardRotate(board:List[Int]):String = {
-    var ret:String = ""
-    for(row <- 1 to n) {
-      for(col <- 1 to n) { 
-        def mid:String = {
-           if(board(col-1) == row) {
-             "Q"
-           } else {
-             "."
-           }
-        }
-        ret += " " + mid + " "
-      }
-      ret += "\n"
+     while(i<LargeInt("10000000000000")) {
+       i *= 2;
+       var start = System.currentTimeMillis();
+       //f = new HashMap[LargeInt,LargeInt];
+       print("fib("+i+"): "); 
+       fib(i);
+       var end = System.currentTimeMillis();
+       println(" in: "+(end-start)+"ms");
+       start = System.currentTimeMillis();
+       print("fast("+i+"): "); 
+       fast(i);
+       end = System.currentTimeMillis();
+       println(" in: "+(end-start)+"ms");
+       start = System.currentTimeMillis();
+       if(i<50) {
+          print("slow("+i+"): "); 
+          slow(i);
+          end = System.currentTimeMillis();
+          println(" in: "+(end-start)+"ms");
+       }
+       if(i<1000000) {
+          start = System.currentTimeMillis();
+          print("slowIt("+i+"): "); 
+          slowIt(i);
+          end = System.currentTimeMillis();
+          println(" in: "+(end-start)+"ms");
+       }
     }
-    ret
   }
   
-  // print the board rotated 180 degrees
-  def printBoard180(board:List[Int]):String = {
-    var ret:String = ""
-    for(col <- n to 1 by -1) {
-      for(row <- n to 1 by -1) { 
-        def mid:String = {
-           if(board(col-1) == row) {
-             "Q"
-           } else {
-             "."
-           }
-        }
-        ret += " " + mid + " "
-      }
-      ret += "\n"
-    }
-    ret
+  // dijkstra's algorithm in recursive form with caching
+  var f = new HashMap[LargeInt,LargeInt];
+  def fib(n:LargeInt): LargeInt = {
+    //println("entering: fib("+n+")");
+    val zero:LargeInt = 0;
+    val one:LargeInt = 1;
+    val two:LargeInt = 2;
+    f.get(n).getOrElse({
+       //println("not cached: fib("+n+")");
+       if(n==0) {
+         0;
+       } else if(n==1 || n==2) {
+         1; 
+       } else if(n % 2 == 0) {
+         val half = n / 2;
+         val nHalf = fib(half);
+         f += ((n/2, nHalf));
+         (2 * fib(half - 1) + nHalf) * nHalf
+       } else {
+         val nMinus1Halved = fib((n-1)/2);
+         f += (((n-1)/2, nMinus1Halved));
+         val nPlus1Halved = fib((n+1)/2); 
+         f += (((n+1)/2, nPlus1Halved));
+         nMinus1Halved * nMinus1Halved + nPlus1Halved * nPlus1Halved
+       }
+     });
   }
+  
+  // iterative form
+  def fast(n: LargeInt): LargeInt = {
+    var a:LargeInt = 1;
+    var b:LargeInt = 0;
+    var c:LargeInt = 0;
+    var d:LargeInt = 1;
+    var i:LargeInt = n+1;
+    while(i > 0) {
+      if(i % 2 == 1) {
+         val t = (b + a) * d + (c * b);
+         a = (c * a) + (d * b);
+         b = t;
+      }  
+      
+      val t = (c * 2 + d) * d;
+      c = c * c + d * d;
+      d = t;
+      i /= 2;
+    }
+    a;
+  }
+  
+  // recursive and slow
+  def slow(n:LargeInt):LargeInt = {
+    if(n==1 || n==2) 1;
+    else slow(n-1) + slow(n-2);
+  }
+  
+  // iterative and slow (but faster than recursive)
+  def slowIt(n:LargeInt):LargeInt = {
+    var sum:LargeInt = 1;
+    var prev:LargeInt = 0;
+    var prev2:LargeInt = 0;
+    var i = sum;
+    while(i < n) {
+      i += 1;
+      prev2 = prev;
+      prev = sum;
+      sum = prev + prev2;
+    }
+    sum;
+  }
+  
 }
