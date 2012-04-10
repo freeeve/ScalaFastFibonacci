@@ -1,132 +1,88 @@
-## ScalaEightQueens
-This is a scala implementation of the Eight Queens algorithm.
+## ScalaFastFibonacci
+This is a scala implementation of various fibonacci algorithms.
+
+It includes a LargeInt wrapper (replacement for BigInt), using the JScience math library. This gave a bit of a performance increase over BigInt.
 
 Run output:
 
 ```
-[info] Running scala.eightqueens.EightQueens 
-List(5, 2, 8, 1, 4, 7, 3, 6)
- .  .  .  .  Q  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- Q  .  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  .  Q  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  Q  .  . 
-
-List(3, 7, 2, 8, 5, 1, 4, 6)
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  .  .  Q  .  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  Q  .  . 
-
-List(3, 5, 2, 8, 1, 7, 4, 6)
- .  .  Q  .  .  .  .  . 
- .  .  .  .  Q  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- Q  .  .  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  Q  .  . 
-
-List(6, 3, 5, 8, 1, 4, 2, 7)
- .  .  .  .  .  Q  .  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  Q  .  .  . 
- .  .  .  .  .  .  .  Q 
- Q  .  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(5, 8, 4, 1, 3, 6, 2, 7)
- .  .  .  .  Q  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  .  Q  .  .  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  Q  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(4, 2, 5, 8, 6, 1, 3, 7)
- .  .  .  Q  .  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  Q  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  .  .  .  Q  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(4, 6, 1, 5, 2, 8, 3, 7)
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  Q  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  .  .  Q  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(6, 3, 1, 8, 5, 2, 4, 7)
- .  .  .  .  .  Q  .  . 
- .  .  Q  .  .  .  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  .  .  Q  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(5, 3, 1, 6, 8, 2, 4, 7)
- .  .  .  .  Q  .  .  . 
- .  .  Q  .  .  .  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  .  .  .  Q  .  . 
- .  .  .  .  .  .  .  Q 
- .  Q  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(4, 2, 8, 6, 1, 3, 5, 7)
- .  .  .  Q  .  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
- .  .  .  .  .  Q  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  Q  .  .  . 
- .  .  .  .  .  .  Q  . 
-
-List(4, 7, 5, 2, 6, 1, 3, 8)
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  .  Q  . 
- .  .  .  .  Q  .  .  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  Q  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  Q  .  .  .  .  . 
- .  .  .  .  .  .  .  Q 
-
-List(5, 7, 2, 6, 3, 1, 4, 8)
- .  .  .  .  Q  .  .  . 
- .  .  .  .  .  .  Q  . 
- .  Q  .  .  .  .  .  . 
- .  .  .  .  .  Q  .  . 
- .  .  Q  .  .  .  .  . 
- Q  .  .  .  .  .  .  . 
- .  .  .  Q  .  .  .  . 
- .  .  .  .  .  .  .  Q 
-
-found 92 distinct solutions
-found 12 unique solutions
+[info] Running scala.fastfibonacci.FastFibonacci 
+fib(2):  in: 21ms
+fast(2):  in: 0ms
+slow(2):  in: 0ms
+fibIt(2):  in: 0ms
+fib(4):  in: 0ms
+fast(4):  in: 1ms
+slow(4):  in: 0ms
+fibIt(4):  in: 0ms
+fib(8):  in: 0ms
+fast(8):  in: 0ms
+slow(8):  in: 1ms
+fibIt(8):  in: 0ms
+fib(16):  in: 0ms
+fast(16):  in: 1ms
+slow(16):  in: 14ms
+fibIt(16):  in: 0ms
+fib(32):  in: 1ms
+fast(32):  in: 0ms
+slow(32):  in: 1155ms
+fibIt(32):  in: 0ms
+fib(64):  in: 1ms
+fast(64):  in: 0ms
+fibIt(64):  in: 0ms
+fib(128):  in: 0ms
+fast(128):  in: 0ms
+fibIt(128):  in: 1ms
+fib(256):  in: 0ms
+fast(256):  in: 0ms
+fibIt(256):  in: 0ms
+fib(512):  in: 1ms
+fast(512):  in: 0ms
+fibIt(512):  in: 0ms
+fib(1024):  in: 0ms
+fast(1024):  in: 1ms
+fibIt(1024):  in: 0ms
+fib(2048):  in: 1ms
+fast(2048):  in: 10ms
+fibIt(2048):  in: 1ms
+fib(4096):  in: 0ms
+fast(4096):  in: 3ms
+fibIt(4096):  in: 3ms
+fib(8192):  in: 4ms
+fast(8192):  in: 11ms
+fibIt(8192):  in: 15ms
+fib(16384):  in: 9ms
+fast(16384):  in: 11ms
+fibIt(16384):  in: 16ms
+fib(32768):  in: 6ms
+fast(32768):  in: 25ms
+fibIt(32768):  in: 49ms
+fib(65536):  in: 15ms
+fast(65536):  in: 59ms
+fibIt(65536):  in: 114ms
+fib(131072):  in: 7ms
+fast(131072):  in: 42ms
+fibIt(131072):  in: 417ms
+fib(262144):  in: 19ms
+fast(262144):  in: 90ms
+fibIt(262144):  in: 1668ms
+fib(524288):  in: 41ms
+fast(524288):  in: 243ms
+fibIt(524288):  in: 6948ms
+fib(1048576):  in: 115ms
+fast(1048576):  in: 603ms
+fib(2097152):  in: 349ms
+fast(2097152):  in: 1979ms
+fib(4194304):  in: 1105ms
+fast(4194304):  in: 6220ms
+fib(8388608):  in: 3629ms
+fast(8388608):  in: 20382ms
+fib(16777216):  in: 11508ms
+fast(16777216):  in: 63478ms
+fib(33554432):  in: 33434ms
+fast(33554432):  in: 186969ms
+fib(67108864):  in: 101806ms
+fast(67108864):  in: 553895ms
 ```
 
 ## License LGPL
